@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="300dp"
         android:text="by"
+        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="italic"
