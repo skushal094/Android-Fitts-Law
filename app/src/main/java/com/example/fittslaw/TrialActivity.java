@@ -21,6 +21,10 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -37,10 +41,11 @@ public class TrialActivity extends AppCompatActivity {
     int[] A = new int[]{0, 0, 0};
     int[] W = new int[]{0, 0, 0};
     int a_pos, w_pos;
-    int MAX_TRIALS = 10;
+    int MAX_TRIALS = 2;
     int currentTrial;
 
-
+    boolean solvingMissed = false;
+    ArrayList<Integer> failedPositions = new ArrayList<Integer>();
 
     long startButtonClickTime, targetButtonClickTime;
 
@@ -52,7 +57,7 @@ public class TrialActivity extends AppCompatActivity {
         // get or initialise trial parameters
         trialIntent = getIntent();
         inputDevice = trialIntent.getStringExtra("input_type");
-        if (inputDevice != null && (inputDevice.equals("Thumb") || inputDevice.equals("Index Finger"))){
+        if (inputDevice != null && (inputDevice.equals("Thumb") || inputDevice.equals("Index Finger"))) {
             // TODO we need to do something if this activity is called for practice.
         }
 
@@ -63,6 +68,13 @@ public class TrialActivity extends AppCompatActivity {
         currentTrial = trialIntent.getIntExtra("current_trial", 1);
         // we will first increment w_pos only
         // so we will get 0, 0 as in a_pos, w_pos pair. and that is why setting a_pos to 0 is required.
+
+        failedPositions = (ArrayList<Integer>) trialIntent.getSerializableExtra("failed_positions");
+        if (failedPositions == null) {
+            failedPositions = new ArrayList<Integer>();
+        }
+
+        solvingMissed = trialIntent.getBooleanExtra("solving_missed", false);
 
         layout = (RelativeLayout) findViewById(R.id.rootLayout);
     }
@@ -77,13 +89,16 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
-    private void startMyScreen(){
+    private void startMyScreen() {
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         screenWidth = displayMetrics.widthPixels;
         screenHeight = displayMetrics.heightPixels;
 
         getOrGenerateAW();
+        if (currentTrial > MAX_TRIALS) {
+            switchActivity();
+        }
 
         startButton = new Button(this);
         startButton.setText("Text");
@@ -125,8 +140,13 @@ public class TrialActivity extends AppCompatActivity {
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
                             targetButtonClickTime = System.currentTimeMillis();
 
-                            Snackbar.make(v, event.getRawX() + "  x  " + event.getRawY(), Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                            if (!isMiss(event.getRawX(), event.getRawY() - (screenHeight - layoutHeight), 125, 225, 1125)) {
+                                Snackbar.make(v, event.getRawX() + "  x  " + event.getRawY(), Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                            } else {
+                                setFailedPositions(a_pos);
+                                setFailedPositions(w_pos);
+                            }
                             switchActivity();
                         }
                         return true;
@@ -134,22 +154,30 @@ public class TrialActivity extends AppCompatActivity {
                 });
             }
 
-            private Object getReference(){
+            private Object getReference() {
                 return ref;
             }
 
-            private RelativeLayout getLayout(){
+            private RelativeLayout getLayout() {
                 return layout;
             }
 
-            private Button getStartButton(){
+            private Button getStartButton() {
                 return startButton;
+            }
+
+            private ArrayList<Integer> getFailedPositions() {
+                return failedPositions;
+            }
+
+            private void setFailedPositions(Integer arr) {
+                failedPositions.add(arr);
             }
         });
     }
 
-    private void switchActivity(){
-        if (currentTrial > MAX_TRIALS) {
+    private void switchActivity() {
+        if (currentTrial <= MAX_TRIALS) {
             Intent myIntent = new Intent(TrialActivity.this, TrialActivity.class);
             myIntent.putExtra("input_type", inputDevice);
             myIntent.putExtra("A", A);
@@ -157,6 +185,10 @@ public class TrialActivity extends AppCompatActivity {
             myIntent.putExtra("a_pos", a_pos);
             myIntent.putExtra("w_pos", w_pos);
             myIntent.putExtra("current_trial", currentTrial);
+
+            myIntent.putIntegerArrayListExtra("failed_positions", failedPositions);
+
+            myIntent.putExtra("solving_missed", solvingMissed);
             TrialActivity.this.startActivity(myIntent);
         }
         // TODO go to finish activity
@@ -164,7 +196,7 @@ public class TrialActivity extends AppCompatActivity {
 
     private void getOrGenerateAW() {
 
-        if(A == null || W == null) {
+        if (A == null || W == null) {
             A = new int[]{0, 0, 0};
             A[0] = ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal;
             A[1] = ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal;
@@ -176,14 +208,46 @@ public class TrialActivity extends AppCompatActivity {
             W[2] = ThreadLocalRandom.current().nextInt(35, 40 + 1) * layoutWidth;
         }
 
+        if (solvingMissed) {
+            if (failedPositions.isEmpty()) {
+                solvingMissed = false;
+                currentTrial += 1;
+                w_pos = 0;
+                a_pos = 0;
+                return;
+            }
+            a_pos = failedPositions.get(0);
+            failedPositions.remove(0);
+
+            w_pos = failedPositions.get(0);
+            failedPositions.remove(0);
+
+            return;
+        }
+
         w_pos += 1;
-        if (w_pos >= 3){
+        if (w_pos >= 3) {
             w_pos = 0;
             a_pos += 1;
-            if (a_pos >= 3){
+            if (a_pos >= 3) {
                 a_pos = 0;
-                currentTrial += 1;
+                if (failedPositions.isEmpty()) {
+                    currentTrial += 1;
+                } else {
+                    a_pos = failedPositions.get(0);
+                    failedPositions.remove(0);
+                    w_pos = failedPositions.get(0);
+                    failedPositions.remove(0);
+                    solvingMissed = true;
+                }
             }
         }
+    }
+
+    public boolean isMiss(double rawX, double rawY, int radius, int center_x, int center_y) {
+
+        double d = Math.pow(radius, 2.0) - (Math.pow(center_x - rawX, 2.0) + Math.pow(center_y - rawY, 2.0));
+
+        return d < 0.0;
     }
 }
