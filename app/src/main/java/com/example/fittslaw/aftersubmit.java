@@ -46,7 +46,7 @@ public class aftersubmit extends AppCompatActivity {
         StringBuilder data = new StringBuilder();
         data.append("Time,Distance");
         for(int i = 0; i<5; i++){
-            data.append("\n"+String.valueOf(i)+","+String.valueOf(i*i));
+            data.append("\n"+String.valueOf(i)+","+String.valueOf(i*i)+","+String.valueOf(20)+","+"shah");
         }
         System.out.println(data.toString().getBytes());
         Intent intent = getIntent();
