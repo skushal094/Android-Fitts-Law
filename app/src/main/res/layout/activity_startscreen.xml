@@ -17,49 +17,55 @@
 <!--        android:text="What input device will you be using?"-->
 <!--        android:textAlignment="center"-->
 <!--        android:textSize="20sp" />-->
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="150dp"
         android:text="What input device will you be using?"
         android:textAlignment="center"
-        android:textSize="30sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textSize="25sp" />
 
     <RadioGroup
         android:id="@+id/radioGender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_below="@+id/textView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:textAlignment="center">
 
         <RadioButton
             android:id="@+id/radioMale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:buttonTint="#191717"
             android:checked="true"
             android:text="Thumb"
-            android:textSize="30sp"/>
+            android:textSize="25sp" />
 
         <RadioButton
             android:id="@+id/radioFemale"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:buttonTint="#231E1E"
             android:text="Index finger"
-            android:textSize="30sp"/>
+            android:textSize="25sp" />
     </RadioGroup>
 
     <Button
         android:id="@+id/btnDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/radioGender"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="30dp"
+        android:layout_below="@+id/radioGender"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
         android:backgroundTint="@color/black"
         android:text="Submit"
         android:textColor="@color/white"
-        android:textSize="25sp"/>
+        android:textSize="20sp" />
 </RelativeLayout>
