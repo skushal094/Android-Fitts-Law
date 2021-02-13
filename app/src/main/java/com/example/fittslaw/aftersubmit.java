@@ -1,5 +1,6 @@
 package com.example.fittslaw;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
@@ -11,6 +12,7 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -41,40 +43,51 @@ public class aftersubmit extends AppCompatActivity {
         receiver_msg.setText(str);
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.R)
     public void export(View view) throws IOException {
-        //generate data
-        StringBuilder data = new StringBuilder();
-        data.append("Time,Distance");
-        for(int i = 0; i<5; i++){
-            data.append("\n"+String.valueOf(i)+","+String.valueOf(i*i)+","+String.valueOf(20)+","+"shah");
-        }
-        System.out.println(data.toString().getBytes());
-        Intent intent = getIntent();
-        String str = intent.getStringExtra("input_type");
-        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        System.out.println(date);
-        String filename = str.replace(" ","").toLowerCase()+"_"+date+".csv";
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
-        System.out.println(file.getAbsolutePath());
 
-        try {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // this will request for permission when user has not granted permission for the app
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            Toast.makeText(this, "in IF", Toast.LENGTH_SHORT).show();
+        } else {
+
+            Toast.makeText(this, "in else", Toast.LENGTH_SHORT).show();
+            //generate data
+            StringBuilder data = new StringBuilder();
+            data.append("Time,Distance");
+            for (int i = 0; i < 5; i++) {
+                data.append("\n" + String.valueOf(i) + "," + String.valueOf(i * i) + "," + String.valueOf(20) + "," + "shah");
+            }
+            System.out.println(data.toString().getBytes());
+            Intent intent = getIntent();
+            String str = intent.getStringExtra("input_type");
+            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            System.out.println(date);
+            String filename = str.replace(" ", "").toLowerCase() + "_" + date + ".csv";
+//        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
+            System.out.println(file.getAbsolutePath());
+
+            try {
                 FileOutputStream out = new FileOutputStream(file);
                 out.write((data.toString()).getBytes());
                 out.close();
-                Toast.makeText(aftersubmit.this,"Saved",Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent(aftersubmit.this,thankyou.class);
-                intent1.putExtra("file_location",file.getAbsolutePath());
+                Toast.makeText(aftersubmit.this, "Saved", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(aftersubmit.this, thankyou.class);
+                intent1.putExtra("file_location", file.getAbsolutePath());
                 startActivity(intent1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(aftersubmit.this, "File not found", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(aftersubmit.this, "Error saving", Toast.LENGTH_SHORT).show();
             }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(aftersubmit.this,"File not found",Toast.LENGTH_SHORT).show();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(aftersubmit.this,"Error saving",Toast.LENGTH_SHORT).show();
         }
-    }
+
 }
 
 
