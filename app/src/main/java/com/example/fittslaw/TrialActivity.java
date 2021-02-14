@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TrialActivity extends AppCompatActivity {
@@ -49,9 +52,27 @@ public class TrialActivity extends AppCompatActivity {
 
     long startButtonClickTime, targetButtonClickTime;
 
+    // for randomness
+    List<Integer> thetaList;
+
+    {
+        thetaList = new ArrayList<Integer>();
+        for (int i = 0; i < 180; i = i + 15) {
+            thetaList.add(i);
+        }
+    }
+
+    int startButtonX, startButtonY, targetButtonX, targetButtonY, wBound;
+    int firstX = 0, firstY = 0, secondX = 0, secondY = 0;
+
+    boolean isTouchEventHandled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_trial);
 
         // get or initialise trial parameters
@@ -100,12 +121,15 @@ public class TrialActivity extends AppCompatActivity {
             switchActivity();
         }
 
+        // random positions
+        loadRandomPositions();
+
         startButton = new Button(this);
         startButton.setText("Text");
         startButton.setBackground(getResources().getDrawable(R.drawable.start_button));
-        startButton.setLayoutParams(new RelativeLayout.LayoutParams(500, 500));
-        startButton.setX(200.0f);
-        startButton.setY(200.0f);
+        startButton.setLayoutParams(new RelativeLayout.LayoutParams(200, 200));
+        startButton.setX(startButtonX);
+        startButton.setY(startButtonY);
         layout.addView(startButton);
 
         Object ref = this;
@@ -116,15 +140,16 @@ public class TrialActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getStartButton().setVisibility(View.GONE);
+//                layout.removeView(startButton);
 
                 startButtonClickTime = System.currentTimeMillis();
 
                 Button targetButton = new Button((Context) getReference());
                 targetButton.setText("Text");
                 targetButton.setBackground(getResources().getDrawable(R.drawable.target_button));
-                targetButton.setLayoutParams(new RelativeLayout.LayoutParams(250, 250));
-                targetButton.setX(100.0f);
-                targetButton.setY(1000.0f);
+                targetButton.setLayoutParams(new RelativeLayout.LayoutParams(W[w_pos], W[w_pos]));
+                targetButton.setX(targetButtonX);
+                targetButton.setY(targetButtonY);
                 getLayout().addView(targetButton);
 
                 paneButton = new Button((Context) getReference());
@@ -137,10 +162,14 @@ public class TrialActivity extends AppCompatActivity {
                 paneButton.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
+                        if(isTouchEventHandled) {
+                            return false;
+                        }
+                        isTouchEventHandled = true;
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
                             targetButtonClickTime = System.currentTimeMillis();
 
-                            if (!isMiss(event.getRawX(), event.getRawY() - (screenHeight - layoutHeight), 125, 225, 1125)) {
+                            if (!isMiss(event.getRawX(), event.getRawY() - (screenHeight - layoutHeight), W[w_pos] / 2, targetButtonX + wBound, targetButtonY + wBound)) {
                                 Snackbar.make(v, event.getRawX() + "  x  " + event.getRawY(), Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             } else {
@@ -198,14 +227,14 @@ public class TrialActivity extends AppCompatActivity {
 
         if (A == null || W == null) {
             A = new int[]{0, 0, 0};
-            A[0] = ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal;
-            A[1] = ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal;
-            A[2] = ThreadLocalRandom.current().nextInt(50, 60 + 1) * layoutDiagonal;
+            A[0] = (int) ((ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal) * 0.01);
+            A[1] = (int) ((ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal) * 0.01);
+            A[2] = (int) ((ThreadLocalRandom.current().nextInt(50, 60 + 1) * layoutDiagonal) * 0.01);
 
             W = new int[]{0, 0, 0};
-            W[0] = ThreadLocalRandom.current().nextInt(10, 15 + 1) * layoutWidth;
-            W[1] = ThreadLocalRandom.current().nextInt(25, 30 + 1) * layoutWidth;
-            W[2] = ThreadLocalRandom.current().nextInt(35, 40 + 1) * layoutWidth;
+            W[0] = (int) ((ThreadLocalRandom.current().nextInt(10, 15 + 1) * layoutWidth) * 0.01);
+            W[1] = (int) ((ThreadLocalRandom.current().nextInt(20, 27 + 1) * layoutWidth) * 0.01);
+            W[2] = (int) ((ThreadLocalRandom.current().nextInt(28, 35 + 1) * layoutWidth) * 0.01);
         }
 
         if (solvingMissed) {
@@ -249,5 +278,61 @@ public class TrialActivity extends AppCompatActivity {
         double d = Math.pow(radius, 2.0) - (Math.pow(center_x - rawX, 2.0) + Math.pow(center_y - rawY, 2.0));
 
         return d < 0.0;
+    }
+
+    private void loadRandomPositions() {
+        int mainCircleX, mainCircleY, mainCircleR, thetaListIndex;
+        double theta = 0.0;
+        boolean tempMadeIt = false;
+
+        mainCircleX = layoutWidth / 2;
+        if (a_pos == 2) {
+            mainCircleY = (int) (0.5 * layoutHeight);
+        } else if (a_pos == 1) {
+            mainCircleY = (int) ((new double[]{0.4, 0.5, 0.6})[(new Random()).nextInt(3)] * layoutHeight);
+        } else {
+            mainCircleY = (int) ((new double[]{0.3, 0.5, 0.7})[(new Random()).nextInt(3)] * layoutHeight);
+        }
+
+        mainCircleR = A[a_pos] / 2;
+
+        wBound = (int) (0.5 * W[w_pos] * Math.sqrt(2.0));
+
+        while (!tempMadeIt) {
+            thetaListIndex = new Random().nextInt(thetaList.size());
+            theta = Math.PI * thetaList.get(thetaListIndex) / 180.0;
+
+            firstX = mainCircleX + ((int) (mainCircleR * Math.cos(theta)));
+            firstY = mainCircleY - ((int) (mainCircleR * Math.sin(theta)));
+
+            if (10 < (firstX + wBound) && (firstX + wBound) < (layoutWidth - 25)) {
+                if (10 < (firstX - wBound) && (firstX - wBound) < (layoutWidth - 25)) {
+                    if (10 < (firstY + wBound) && (firstY + wBound) < (layoutHeight - 25)) {
+                        if (10 < (firstY - wBound) && (firstY - wBound) < (layoutHeight - 25)) {
+                            tempMadeIt = true;
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            thetaList.remove(thetaListIndex);
+        }
+
+        secondX = mainCircleX - ((int) (mainCircleR * Math.cos(theta)));
+        secondY = mainCircleY + ((int) (mainCircleR * Math.sin(theta)));
+
+        if (new Random().nextInt(1) == 0) {
+            startButtonX = firstX - wBound;
+            startButtonY = firstY - wBound;
+            targetButtonX = secondX - wBound;
+            targetButtonY = secondY - wBound;
+        }
+        else {
+            startButtonX = secondX - wBound;
+            startButtonY = secondY - wBound;
+            targetButtonX = firstX - wBound;
+            targetButtonY = firstY - wBound;
+        }
     }
 }
