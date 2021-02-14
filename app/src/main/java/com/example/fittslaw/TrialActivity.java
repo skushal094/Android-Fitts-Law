@@ -25,6 +25,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,13 +41,16 @@ public class TrialActivity extends AppCompatActivity {
     DisplayMetrics displayMetrics;
 
     int screenWidth, screenHeight, layoutWidth, layoutHeight, layoutDiagonal;
+    int START_BUTTON_WIDTH = 200;
 
     String inputDevice;
     int[] A = new int[]{0, 0, 0};
     int[] W = new int[]{0, 0, 0};
     int a_pos, w_pos;
-    int MAX_TRIALS = 2;
+    int MAX_TRIALS = 2;     // TODO change this after merge
     int currentTrial;
+
+    double target_touch_x, target_touch_y;
 
     boolean solvingMissed = false;
     ArrayList<Integer> failedPositions = new ArrayList<Integer>();
@@ -63,9 +68,13 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     int startButtonX, startButtonY, targetButtonX, targetButtonY, wBound;
+    int target_button_center_X, target_button_center_Y;
     int firstX = 0, firstY = 0, secondX = 0, secondY = 0;
 
     boolean isTouchEventHandled = false;
+
+    DatabaseHelper db_helper;
+    boolean isActualTrial = true; // TODO change this after merge
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +88,11 @@ public class TrialActivity extends AppCompatActivity {
         trialIntent = getIntent();
         inputDevice = trialIntent.getStringExtra("input_type");
         if (inputDevice != null && (inputDevice.equals("Thumb") || inputDevice.equals("Index Finger"))) {
-            // TODO we need to do something if this activity is called for practice.
+            isActualTrial = true;
+        }
+
+        if (isActualTrial) {
+            db_helper = new DatabaseHelper(this);
         }
 
         A = trialIntent.getIntArrayExtra("A");
@@ -127,7 +140,7 @@ public class TrialActivity extends AppCompatActivity {
         startButton = new Button(this);
         startButton.setText("Text");
         startButton.setBackground(getResources().getDrawable(R.drawable.start_button));
-        startButton.setLayoutParams(new RelativeLayout.LayoutParams(200, 200));
+        startButton.setLayoutParams(new RelativeLayout.LayoutParams(START_BUTTON_WIDTH, START_BUTTON_WIDTH));
         startButton.setX(startButtonX);
         startButton.setY(startButtonY);
         layout.addView(startButton);
@@ -166,15 +179,24 @@ public class TrialActivity extends AppCompatActivity {
                             return false;
                         }
                         isTouchEventHandled = true;
-                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                            targetButtonClickTime = System.currentTimeMillis();
 
-                            if (!isMiss(event.getRawX(), event.getRawY() - (screenHeight - layoutHeight), W[w_pos] / 2, targetButtonX + wBound, targetButtonY + wBound)) {
+                        targetButtonClickTime = System.currentTimeMillis();
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            target_touch_x = event.getRawX();
+//                            target_touch_y = event.getRawY() - (screenHeight - layoutHeight);
+                            target_touch_y = event.getRawY(); // since we are using full-screen
+                            if (!isMiss(target_touch_x, target_touch_y, W[w_pos] / 2, target_button_center_X, target_button_center_Y)) {
                                 Snackbar.make(v, event.getRawX() + "  x  " + event.getRawY(), Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
+                                if(isActualTrial) {     // do not write to DB in practice mode
+                                    writeDataToDB(0);
+                                }
                             } else {
                                 setFailedPositions(a_pos);
                                 setFailedPositions(w_pos);
+                                if(isActualTrial) {     // do not write to DB in practice mode
+                                    writeDataToDB(1);
+                                }
                             }
                             switchActivity();
                         }
@@ -220,12 +242,21 @@ public class TrialActivity extends AppCompatActivity {
             myIntent.putExtra("solving_missed", solvingMissed);
             TrialActivity.this.startActivity(myIntent);
         }
-        // TODO go to finish activity
+        else {
+            // create intent here
+            // TODO pass isActualTrial param into intent, if true in that activity, fetch records and write them in file
+            // go to next activity here
+            // TODO go to finish activity
+        }
     }
 
     private void getOrGenerateAW() {
 
         if (A == null || W == null) {
+            if(isActualTrial) {
+                db_helper.deleteAllTrialDataEntry();
+            }
+
             A = new int[]{0, 0, 0};
             A[0] = (int) ((ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal) * 0.01);
             A[1] = (int) ((ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal) * 0.01);
@@ -327,12 +358,36 @@ public class TrialActivity extends AppCompatActivity {
             startButtonY = firstY - wBound;
             targetButtonX = secondX - wBound;
             targetButtonY = secondY - wBound;
+            target_button_center_X = secondX;
+            target_button_center_Y = secondY;
         }
         else {
             startButtonX = secondX - wBound;
             startButtonY = secondY - wBound;
             targetButtonX = firstX - wBound;
             targetButtonY = firstY - wBound;
+            target_button_center_X = firstX;
+            target_button_center_Y = firstY;
+        }
+    }
+
+    public void writeDataToDB(int is_missed) {
+        if(isActualTrial) {
+            double index_of_difficulty;
+            DecimalFormat df = new DecimalFormat("#.####");
+            df.setRoundingMode(RoundingMode.CEILING);
+
+            index_of_difficulty = Math.log(((1.0 * A[a_pos]) / W[w_pos]) + 1.0) / Math.log(2);
+
+            TrialDataEntry trialDataEntry = new TrialDataEntry(
+                    currentTrial, inputDevice, startButtonX + wBound, startButtonY + wBound,
+                    START_BUTTON_WIDTH, target_button_center_X, target_button_center_Y,
+                    W[w_pos], target_touch_x, target_touch_y, startButtonClickTime,
+                    targetButtonClickTime, targetButtonClickTime - startButtonClickTime,
+                    A[a_pos], Double.parseDouble(df.format(index_of_difficulty)), is_missed
+            );
+
+            db_helper.addTrialDataEntry(trialDataEntry);
         }
     }
 }
