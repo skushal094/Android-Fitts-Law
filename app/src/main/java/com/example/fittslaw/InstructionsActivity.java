@@ -57,12 +57,17 @@ public class InstructionsActivity extends AppCompatActivity {
                         || ActivityCompat.checkSelfPermission(InstructionsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     // this will request for permission when user has not granted permission for the app
                     ActivityCompat.requestPermissions(InstructionsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                    InstructionsActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(InstructionsActivity.this, "You must grant storage access.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+
+                    if (ActivityCompat.checkSelfPermission(InstructionsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) == -1) {
+                        Toast.makeText(InstructionsActivity.this, "You must grant storage access.", Toast.LENGTH_SHORT).show();
+                    }
+
+//                    InstructionsActivity.this.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Toast.makeText(InstructionsActivity.this, "You must grant storage access.", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                 } else {
                     Intent intent = new Intent(InstructionsActivity.this, MainScreenActivity.class);
                     startActivity(intent);
