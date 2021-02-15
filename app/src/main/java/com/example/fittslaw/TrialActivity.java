@@ -41,7 +41,7 @@ public class TrialActivity extends AppCompatActivity {
     DisplayMetrics displayMetrics;
 
     int screenWidth, screenHeight, layoutWidth, layoutHeight, layoutDiagonal;
-    int START_BUTTON_WIDTH = 200;
+    int START_BUTTON_WIDTH = 170;
 
     String inputDevice;
     int[] A = new int[]{0, 0, 0};
@@ -138,7 +138,7 @@ public class TrialActivity extends AppCompatActivity {
         loadRandomPositions();
 
         startButton = new Button(this);
-        startButton.setText("Text");
+        startButton.setText("");
         startButton.setBackground(getResources().getDrawable(R.drawable.start_button));
         startButton.setLayoutParams(new RelativeLayout.LayoutParams(START_BUTTON_WIDTH, START_BUTTON_WIDTH));
         startButton.setX(startButtonX);
@@ -158,7 +158,7 @@ public class TrialActivity extends AppCompatActivity {
                 startButtonClickTime = System.currentTimeMillis();
 
                 Button targetButton = new Button((Context) getReference());
-                targetButton.setText("Text");
+                targetButton.setText("");
                 targetButton.setBackground(getResources().getDrawable(R.drawable.target_button));
                 targetButton.setLayoutParams(new RelativeLayout.LayoutParams(W[w_pos], W[w_pos]));
                 targetButton.setX(targetButtonX);
@@ -186,8 +186,6 @@ public class TrialActivity extends AppCompatActivity {
 //                            target_touch_y = event.getRawY() - (screenHeight - layoutHeight);
                             target_touch_y = event.getRawY(); // since we are using full-screen
                             if (!isMiss(target_touch_x, target_touch_y, W[w_pos] / 2, target_button_center_X, target_button_center_Y)) {
-                                Snackbar.make(v, event.getRawX() + "  x  " + event.getRawY(), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
                                 if(isActualTrial) {     // do not write to DB in practice mode
                                     writeDataToDB(0);
                                 }
@@ -353,7 +351,7 @@ public class TrialActivity extends AppCompatActivity {
         secondX = mainCircleX - ((int) (mainCircleR * Math.cos(theta)));
         secondY = mainCircleY + ((int) (mainCircleR * Math.sin(theta)));
 
-        if (new Random().nextInt(1) == 0) {
+        if (new Random().nextInt(2) == 0) {
             startButtonX = firstX - wBound;
             startButtonY = firstY - wBound;
             targetButtonX = secondX - wBound;
