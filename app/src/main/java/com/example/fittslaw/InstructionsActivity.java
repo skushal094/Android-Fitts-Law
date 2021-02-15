@@ -22,6 +22,11 @@ public class InstructionsActivity extends AppCompatActivity {
     Button buttonAccept;
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructions);

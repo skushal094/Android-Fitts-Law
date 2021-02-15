@@ -389,4 +389,9 @@ public class TrialActivity extends AppCompatActivity {
             db_helper.addTrialDataEntry(trialDataEntry);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
