@@ -47,7 +47,7 @@ public class TrialActivity extends AppCompatActivity {
     int[] A = new int[]{0, 0, 0};
     int[] W = new int[]{0, 0, 0};
     int a_pos, w_pos;
-    int MAX_TRIALS = 2;     // TODO change this after merge
+    int MAX_TRIALS = 10;
     int currentTrial;
 
     double target_touch_x, target_touch_y;
@@ -93,6 +93,9 @@ public class TrialActivity extends AppCompatActivity {
 
         if (isActualTrial) {
             db_helper = new DatabaseHelper(this);
+        }
+        else {
+            MAX_TRIALS = 1;
         }
 
         A = trialIntent.getIntArrayExtra("A");
