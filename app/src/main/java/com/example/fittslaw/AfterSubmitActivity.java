@@ -3,15 +3,10 @@ package com.example.fittslaw;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,13 +18,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class aftersubmit extends AppCompatActivity {
+public class AfterSubmitActivity extends AppCompatActivity {
     TextView receiver_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +67,16 @@ public class aftersubmit extends AppCompatActivity {
                 FileOutputStream out = new FileOutputStream(file);
                 out.write((data.toString()).getBytes());
                 out.close();
-                Toast.makeText(aftersubmit.this, "Saved", Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent(aftersubmit.this, thankyou.class);
+                Toast.makeText(AfterSubmitActivity.this, "Saved", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(AfterSubmitActivity.this, ThankYouActivity.class);
                 intent1.putExtra("file_location", file.getAbsolutePath());
                 startActivity(intent1);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(aftersubmit.this, "File not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AfterSubmitActivity.this, "File not found", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(aftersubmit.this, "Error saving", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AfterSubmitActivity.this, "Error saving", Toast.LENGTH_SHORT).show();
             }
         }
         }

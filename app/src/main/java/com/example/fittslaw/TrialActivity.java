@@ -8,7 +8,7 @@ import android.os.Bundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class trialacivity extends AppCompatActivity {
+public class TrialActivity extends AppCompatActivity {
     Timer timer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class trialacivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(trialacivity.this,aftersubmit.class);
+                Intent intent = new Intent(TrialActivity.this, AfterSubmitActivity.class);
 
 
                 Intent intent1 = getIntent();

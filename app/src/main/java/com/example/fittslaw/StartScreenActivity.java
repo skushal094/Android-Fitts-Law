@@ -8,9 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-public class startscreen extends AppCompatActivity {
+public class StartScreenActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton radioButton;
     Button button;
@@ -29,7 +28,7 @@ public class startscreen extends AppCompatActivity {
                 int selectedID = radioGroup.getCheckedRadioButtonId();
                 radioButton = findViewById(selectedID);
 //                Toast.makeText(startscreen.this, radioButton.getText(),Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(startscreen.this,trialacivity.class);
+                Intent intent = new Intent(StartScreenActivity.this, TrialActivity.class);
                 intent.putExtra("input_type",radioButton.getText().toString());
                 startActivity(intent);
 //                finish();

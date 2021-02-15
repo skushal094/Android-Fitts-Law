@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class mainscreen extends AppCompatActivity {
+public class MainScreenActivity extends AppCompatActivity {
     ListView listview;
     String mlabel[] = {"Practice Test","Trial Test"};
 
@@ -33,11 +32,11 @@ public class mainscreen extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0){
-                    Toast.makeText(mainscreen.this, "First List Item", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainScreenActivity.this, "First List Item", Toast.LENGTH_SHORT).show();
                 }
                 if (position == 1){
 //                    Toast.makeText(mainscreen.this, "Second List Item", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(mainscreen.this,startscreen.class);
+                    Intent intent = new Intent(MainScreenActivity.this, StartScreenActivity.class);
                     startActivity(intent);
                     finish();
                 }

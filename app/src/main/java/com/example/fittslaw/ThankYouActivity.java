@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class thankyou extends AppCompatActivity {
+public class ThankYouActivity extends AppCompatActivity {
     TextView receiver_msg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

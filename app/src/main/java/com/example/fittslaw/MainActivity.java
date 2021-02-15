@@ -7,8 +7,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.util.Timer;
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this,mainscreen.class);
+                Intent intent = new Intent(MainActivity.this, MainScreenActivity.class);
                 startActivity(intent);
                 finish();
             }
