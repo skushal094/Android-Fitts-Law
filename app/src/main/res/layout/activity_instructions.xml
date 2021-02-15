@@ -31,7 +31,7 @@
             android:layout_below="@id/instructionsHeader"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="25dp"
-            android:text="We assume that when you start the round in any trial, you are clicking at the center of the start button."
+            android:text="It is required to allow storage access to this app in order to save and export data."
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="20sp">
@@ -111,7 +111,7 @@
             android:layout_below="@+id/text6"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="25dp"
-            android:text="It is required to allow storage access to this app in order to save and export data."
+            android:text="We assume that when you start the round in any trial, you are clicking at the center of the start button."
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="20sp" />
@@ -128,11 +128,23 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/text9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text8"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:text="After clicking target button, you may see other green button on the same screen appearing. However, you should wait for the screen to change before clicking on the green button for the next round."
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
         <Button
             android:id="@+id/buttonAccept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text8"
+            android:layout_below="@id/text9"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:backgroundTint="@color/black"
