@@ -74,7 +74,7 @@ public class TrialActivity extends AppCompatActivity {
     boolean isTouchEventHandled = false;
 
     DatabaseHelper db_helper;
-    boolean isActualTrial = true; // TODO change this after merge
+    boolean isActualTrial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +175,7 @@ public class TrialActivity extends AppCompatActivity {
                 paneButton.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        if(isTouchEventHandled) {
+                        if (isTouchEventHandled) {
                             return false;
                         }
                         isTouchEventHandled = true;
@@ -186,13 +186,13 @@ public class TrialActivity extends AppCompatActivity {
 //                            target_touch_y = event.getRawY() - (screenHeight - layoutHeight);
                             target_touch_y = event.getRawY(); // since we are using full-screen
                             if (!isMiss(target_touch_x, target_touch_y, W[w_pos] / 2, target_button_center_X, target_button_center_Y)) {
-                                if(isActualTrial) {     // do not write to DB in practice mode
+                                if (isActualTrial) {     // do not write to DB in practice mode
                                     writeDataToDB(0);
                                 }
                             } else {
                                 setFailedPositions(a_pos);
                                 setFailedPositions(w_pos);
-                                if(isActualTrial) {     // do not write to DB in practice mode
+                                if (isActualTrial) {     // do not write to DB in practice mode
                                     writeDataToDB(1);
                                 }
                             }
@@ -239,8 +239,7 @@ public class TrialActivity extends AppCompatActivity {
 
             myIntent.putExtra("solving_missed", solvingMissed);
             TrialActivity.this.startActivity(myIntent);
-        }
-        else {
+        } else {
             Intent intent = new Intent(TrialActivity.this, AfterSubmitActivity.class);
             intent.putExtra("input_type", inputDevice);
             intent.putExtra("is_actual_trial", isActualTrial);
@@ -251,7 +250,7 @@ public class TrialActivity extends AppCompatActivity {
     private void getOrGenerateAW() {
 
         if (A == null || W == null) {
-            if(isActualTrial) {
+            if (isActualTrial) {
                 db_helper.deleteAllTrialDataEntry();
             }
 
@@ -358,8 +357,7 @@ public class TrialActivity extends AppCompatActivity {
             targetButtonY = secondY - wBound;
             target_button_center_X = secondX;
             target_button_center_Y = secondY;
-        }
-        else {
+        } else {
             startButtonX = secondX - wBound;
             startButtonY = secondY - wBound;
             targetButtonX = firstX - wBound;
@@ -370,7 +368,7 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     public void writeDataToDB(int is_missed) {
-        if(isActualTrial) {
+        if (isActualTrial) {
             double index_of_difficulty;
             DecimalFormat df = new DecimalFormat("#.####");
             df.setRoundingMode(RoundingMode.CEILING);

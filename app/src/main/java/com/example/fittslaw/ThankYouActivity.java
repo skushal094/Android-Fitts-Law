@@ -8,12 +8,13 @@ import android.widget.TextView;
 
 public class ThankYouActivity extends AppCompatActivity {
     TextView receiver_msg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thankyou);
 
-        receiver_msg = (TextView)findViewById(R.id.textView11);
+        receiver_msg = (TextView) findViewById(R.id.textView11);
         Intent intent = getIntent();
         String str = intent.getStringExtra("file_location");
         System.out.println(str);

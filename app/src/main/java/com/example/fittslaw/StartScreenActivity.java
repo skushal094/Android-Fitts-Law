@@ -13,12 +13,14 @@ public class StartScreenActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton radioButton;
     Button button;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startscreen);
         addListenerButton();
     }
+
     private void addListenerButton() {
         radioGroup = findViewById(R.id.radioGender);
         button = findViewById(R.id.btnDisplay);
@@ -29,7 +31,7 @@ public class StartScreenActivity extends AppCompatActivity {
                 radioButton = findViewById(selectedID);
 //                Toast.makeText(startscreen.this, radioButton.getText(),Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(StartScreenActivity.this, TrialActivity.class);
-                intent.putExtra("input_type",radioButton.getText().toString());
+                intent.putExtra("input_type", radioButton.getText().toString());
                 startActivity(intent);
 //                finish();
             }

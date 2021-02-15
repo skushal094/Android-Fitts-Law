@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // this will request for permission when user has not granted permission for the app
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Toast.makeText(this, "in IF", Toast.LENGTH_SHORT).show();
         }
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -36,6 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        },5000);
+        }, 3000);
     }
 }

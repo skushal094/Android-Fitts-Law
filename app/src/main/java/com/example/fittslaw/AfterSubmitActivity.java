@@ -20,22 +20,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AfterSubmitActivity extends AppCompatActivity {
     TextView receiver_msg;
+    boolean isActualTrial = false;
+    DatabaseHelper db_helper;
+    List<TrialDataEntry> dataEntryList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aftersubmit);
 
-        receiver_msg = (TextView)findViewById(R.id.text_input_type);
+        receiver_msg = (TextView) findViewById(R.id.text_input_type);
         Intent intent = getIntent();
         String str = intent.getStringExtra("input_type");
-        System.out.println(str);
+        isActualTrial = intent.getBooleanExtra("is_actual_trial", false);
+        db_helper = new DatabaseHelper(this);
         receiver_msg.setText(str);
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     public void export(View view) throws IOException {
 
@@ -43,25 +50,43 @@ public class AfterSubmitActivity extends AppCompatActivity {
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             // this will request for permission when user has not granted permission for the app
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            Toast.makeText(this, "in IF", Toast.LENGTH_SHORT).show();
-        } else {
+//            Toast.makeText(this, "in IF", Toast.LENGTH_SHORT).show();
+        } else if (isActualTrial) {
 
-            Toast.makeText(this, "in else", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "in else", Toast.LENGTH_SHORT).show();
             //generate data
+            dataEntryList = db_helper.getAllTrialDataEntry();
+
             StringBuilder data = new StringBuilder();
-            data.append("Time,Distance");
-            for (int i = 0; i < 5; i++) {
-                data.append("\n" + String.valueOf(i) + "," + String.valueOf(i * i) + "," + String.valueOf(20) + "," + "shah");
+            data.append("id,trial_no,input_device,start_button_x,start_button_y,start_button_width,target_button_x," +
+                    "target_button_y,target_button_width,target_touch_x,target_touch_y,start_button_click_timestamp," +
+                    "target_button_click_timestamp,movement_time,amplitude,index_of_difficulty,is_missed");
+            for (TrialDataEntry trialDataEntry : dataEntryList) {
+                data.append("\n")
+                        .append(trialDataEntry._id).append(",")
+                        .append(trialDataEntry.trial_no).append(",")
+                        .append(trialDataEntry.input_device).append(",")
+                        .append(trialDataEntry.start_button_x).append(",")
+                        .append(trialDataEntry.start_button_y).append(",")
+                        .append(trialDataEntry.start_button_width).append(",")
+                        .append(trialDataEntry.target_button_x).append(",")
+                        .append(trialDataEntry.target_button_y).append(",")
+                        .append(trialDataEntry.target_button_width).append(",")
+                        .append(trialDataEntry.target_touch_x).append(",")
+                        .append(trialDataEntry.target_touch_y).append(",")
+                        .append(trialDataEntry.start_button_click_timestamp).append(",")
+                        .append(trialDataEntry.target_button_click_timestamp).append(",")
+                        .append(trialDataEntry.movement_time).append(",")
+                        .append(trialDataEntry.amplitude).append(",")
+                        .append(trialDataEntry.index_of_difficulty).append(",")
+                        .append(trialDataEntry.is_missed);
             }
-            System.out.println(data.toString().getBytes());
             Intent intent = getIntent();
             String str = intent.getStringExtra("input_type");
             String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-            System.out.println(date);
             String filename = str.replace(" ", "").toLowerCase() + "_" + date + ".csv";
 //        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
-            System.out.println(file.getAbsolutePath());
 
             try {
                 FileOutputStream out = new FileOutputStream(file);
@@ -79,7 +104,7 @@ public class AfterSubmitActivity extends AppCompatActivity {
                 Toast.makeText(AfterSubmitActivity.this, "Error saving", Toast.LENGTH_SHORT).show();
             }
         }
-        }
+    }
 
 }
 
