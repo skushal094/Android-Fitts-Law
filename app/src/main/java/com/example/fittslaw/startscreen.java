@@ -29,7 +29,7 @@ public class startscreen extends AppCompatActivity {
                 int selectedID = radioGroup.getCheckedRadioButtonId();
                 radioButton = findViewById(selectedID);
 //                Toast.makeText(startscreen.this, radioButton.getText(),Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(startscreen.this,aftersubmit.class);
+                Intent intent = new Intent(startscreen.this,trialacivity.class);
                 intent.putExtra("input_type",radioButton.getText().toString());
                 startActivity(intent);
 //                finish();
