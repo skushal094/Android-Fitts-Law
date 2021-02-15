@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,9 @@ public class AfterSubmitActivity extends AppCompatActivity {
     boolean isActualTrial = false;
     DatabaseHelper db_helper;
     List<TrialDataEntry> dataEntryList;
+    Button shareButton;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +42,12 @@ public class AfterSubmitActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String str = intent.getStringExtra("input_type");
         isActualTrial = intent.getBooleanExtra("is_actual_trial", false);
+        if (!isActualTrial) {
+            shareButton = findViewById(R.id.button);
+            shareButton.setText("GO TO HOME");
+        }
         db_helper = new DatabaseHelper(this);
         receiver_msg.setText(str);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -103,6 +110,10 @@ public class AfterSubmitActivity extends AppCompatActivity {
                 e.printStackTrace();
                 Toast.makeText(AfterSubmitActivity.this, "Error saving", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Intent intent = new Intent(AfterSubmitActivity.this, MainScreenActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

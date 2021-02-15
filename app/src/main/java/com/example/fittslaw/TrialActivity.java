@@ -87,7 +87,7 @@ public class TrialActivity extends AppCompatActivity {
         // get or initialise trial parameters
         trialIntent = getIntent();
         inputDevice = trialIntent.getStringExtra("input_type");
-        if (inputDevice != null && (inputDevice.equals("Thumb") || inputDevice.equals("Index Finger"))) {
+        if (inputDevice != null && (inputDevice.equals("Thumb") || inputDevice.equals("Index finger"))) {
             isActualTrial = true;
         }
 
