@@ -241,6 +241,9 @@ public class TrialActivity extends AppCompatActivity {
             TrialActivity.this.startActivity(myIntent);
         }
         else {
+            Intent intent = new Intent(TrialActivity.this, AfterSubmitActivity.class);
+            intent.putExtra("input_type", inputDevice);
+            startActivity(intent);
             // create intent here
             // TODO pass isActualTrial param into intent, if true in that activity, fetch records and write them in file
             // go to next activity here
