@@ -20,6 +20,7 @@ public class InstructionsActivity extends AppCompatActivity {
 
     Object res;
     Button buttonAccept;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +28,12 @@ public class InstructionsActivity extends AppCompatActivity {
 
         addListenerButton();
     }
-    public void Permission_Message(){
+
+    public void Permission_Message() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
     }
-    public void openDialog(){
+
+    public void openDialog() {
         System.out.println("open dialog");
         AlertDialog.Builder builder = new AlertDialog.Builder(InstructionsActivity.this);
         builder.setTitle("Notification");
@@ -44,30 +47,29 @@ public class InstructionsActivity extends AppCompatActivity {
         });
 
     }
+
     public void addListenerButton() {
         buttonAccept = findViewById(R.id.buttonAccept);
         buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ActivityCompat.checkSelfPermission(InstructionsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                        || ActivityCompat.checkSelfPermission(InstructionsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
+                        || ActivityCompat.checkSelfPermission(InstructionsActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     // this will request for permission when user has not granted permission for the app
                     ActivityCompat.requestPermissions(InstructionsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                     InstructionsActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(InstructionsActivity.this, "hello", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(InstructionsActivity.this, "You must grant storage access.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
-                    Intent intent = new Intent(InstructionsActivity.this, StartScreenActivity.class);
+                    Intent intent = new Intent(InstructionsActivity.this, MainScreenActivity.class);
                     startActivity(intent);
                 }
             }
         });
     }
-
 }
 //    public void SubmitButton(View view){
 //        res = this;
