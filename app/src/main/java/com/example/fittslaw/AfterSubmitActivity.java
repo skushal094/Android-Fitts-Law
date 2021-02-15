@@ -90,7 +90,7 @@ public class AfterSubmitActivity extends AppCompatActivity {
             }
             Intent intent = getIntent();
             String str = intent.getStringExtra("input_type");
-            String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ssZ", Locale.getDefault()).format(new Date());
             String filename = str.replace(" ", "").toLowerCase() + "_" + date + ".csv";
 //        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
