@@ -243,11 +243,8 @@ public class TrialActivity extends AppCompatActivity {
         else {
             Intent intent = new Intent(TrialActivity.this, AfterSubmitActivity.class);
             intent.putExtra("input_type", inputDevice);
+            intent.putExtra("is_actual_trial", isActualTrial);
             startActivity(intent);
-            // create intent here
-            // TODO pass isActualTrial param into intent, if true in that activity, fetch records and write them in file
-            // go to next activity here
-            // TODO go to finish activity
         }
     }
 
