@@ -88,14 +88,16 @@ public class AfterSubmitActivity extends AppCompatActivity {
                         .append(trialDataEntry.index_of_difficulty).append(",")
                         .append(trialDataEntry.is_missed);
             }
-            Intent intent = getIntent();
-            String str = intent.getStringExtra("input_type");
-            String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ssZ", Locale.getDefault()).format(new Date());
-            String filename = str.replace(" ", "").toLowerCase() + "_" + date + ".csv";
-//        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
+
 
             try {
+                Intent intent = getIntent();
+                String str = intent.getStringExtra("input_type");
+                String date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ssZ", Locale.getDefault()).format(new Date());
+                String filename = str.replace(" ", "").toLowerCase() + "_" + date + ".csv";
+//        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),filename);
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), filename);
+                System.out.println(file);
                 FileOutputStream out = new FileOutputStream(file);
                 out.write((data.toString()).getBytes());
                 out.close();

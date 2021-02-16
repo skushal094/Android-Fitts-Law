@@ -75,6 +75,7 @@ public class InstructionsActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 //    public void SubmitButton(View view){
 //        res = this;
