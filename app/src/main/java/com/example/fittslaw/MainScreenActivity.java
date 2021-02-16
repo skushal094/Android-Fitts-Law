@@ -22,6 +22,11 @@ public class MainScreenActivity extends AppCompatActivity {
     Intent intent;
 
     @Override
+    public void onBackPressed() {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainscreen);

@@ -32,6 +32,11 @@ public class AfterSubmitActivity extends AppCompatActivity {
     List<TrialDataEntry> dataEntryList;
     Button shareButton;
 
+    @Override
+    public void onBackPressed() {
+
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
