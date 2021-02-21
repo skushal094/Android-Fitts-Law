@@ -106,7 +106,7 @@
             android:background="#FFFFFF"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="25dp"
-            android:text="When you click on target button and are supposed tp go for he next round in trials, you should wait until you see the start button again. You should not touch anywhere on the screen after clicking the target button and before seeing the next start button."
+            android:text="When you click on target button and are supposed to go for the next round in trials, you should wait until you see the start button again. You should not touch anywhere on the screen after clicking the target button and before seeing the next start button."
             android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="20sp" />
