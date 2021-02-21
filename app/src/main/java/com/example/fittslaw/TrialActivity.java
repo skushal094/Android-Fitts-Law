@@ -133,6 +133,8 @@ public class TrialActivity extends AppCompatActivity {
         screenHeight = displayMetrics.heightPixels;
 
         getOrGenerateAW();
+
+
         if (currentTrial > MAX_TRIALS) {
             switchActivity();
         }
@@ -238,7 +240,10 @@ public class TrialActivity extends AppCompatActivity {
             myIntent.putExtra("w_pos", w_pos);
             myIntent.putExtra("current_trial", currentTrial);
 
+
             myIntent.putIntegerArrayListExtra("failed_positions", failedPositions);
+
+
 
             myIntent.putExtra("solving_missed", solvingMissed);
             TrialActivity.this.startActivity(myIntent);
@@ -248,6 +253,7 @@ public class TrialActivity extends AppCompatActivity {
             intent.putExtra("is_actual_trial", isActualTrial);
             startActivity(intent);
         }
+
     }
 
     private void getOrGenerateAW() {
