@@ -258,14 +258,20 @@ public class TrialActivity extends AppCompatActivity {
             }
 
             A = new int[]{0, 0, 0};
-            A[0] = (int) ((ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal) * 0.01);
-            A[1] = (int) ((ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal) * 0.01);
-            A[2] = (int) ((ThreadLocalRandom.current().nextInt(50, 60 + 1) * layoutDiagonal) * 0.01);
+//            A[0] = (int) ((ThreadLocalRandom.current().nextInt(20, 30 + 1) * layoutDiagonal) * 0.01);
+//            A[1] = (int) ((ThreadLocalRandom.current().nextInt(35, 45 + 1) * layoutDiagonal) * 0.01);
+//            A[2] = (int) ((ThreadLocalRandom.current().nextInt(50, 60 + 1) * layoutDiagonal) * 0.01);
+            A[0] = 550;
+            A[1] = 890;
+            A[2] = 1120;
 
             W = new int[]{0, 0, 0};
-            W[0] = (int) ((ThreadLocalRandom.current().nextInt(10, 15 + 1) * layoutWidth) * 0.01);
-            W[1] = (int) ((ThreadLocalRandom.current().nextInt(20, 27 + 1) * layoutWidth) * 0.01);
-            W[2] = (int) ((ThreadLocalRandom.current().nextInt(28, 35 + 1) * layoutWidth) * 0.01);
+//            W[0] = (int) ((ThreadLocalRandom.current().nextInt(10, 15 + 1) * layoutWidth) * 0.01);
+//            W[1] = (int) ((ThreadLocalRandom.current().nextInt(20, 27 + 1) * layoutWidth) * 0.01);
+//            W[2] = (int) ((ThreadLocalRandom.current().nextInt(28, 35 + 1) * layoutWidth) * 0.01);
+            W[0] = 140;
+            W[1] = 190;
+            W[2] = 250;
         }
 
         if (solvingMissed) {
@@ -312,7 +318,7 @@ public class TrialActivity extends AppCompatActivity {
     }
 
     private void loadRandomPositions() {
-        int mainCircleX, mainCircleY, mainCircleR, thetaListIndex;
+        int mainCircleX, mainCircleY, mainCircleR, thetaListIndex, buttonBound;
         double theta = 0.0;
         boolean tempMadeIt = false;
 
@@ -328,6 +334,8 @@ public class TrialActivity extends AppCompatActivity {
         mainCircleR = A[a_pos] / 2;
 
         wBound = (int) (0.5 * W[w_pos] * Math.sqrt(2.0));
+        buttonBound = (int) (START_BUTTON_WIDTH * 0.5 * Math.sqrt(2.0));
+        if (wBound > buttonBound) buttonBound = wBound;
 
         while (!tempMadeIt) {
             thetaListIndex = new Random().nextInt(thetaList.size());
@@ -336,10 +344,10 @@ public class TrialActivity extends AppCompatActivity {
             firstX = mainCircleX + ((int) (mainCircleR * Math.cos(theta)));
             firstY = mainCircleY - ((int) (mainCircleR * Math.sin(theta)));
 
-            if (10 < (firstX + wBound) && (firstX + wBound) < (layoutWidth - 25)) {
-                if (10 < (firstX - wBound) && (firstX - wBound) < (layoutWidth - 25)) {
-                    if (10 < (firstY + wBound) && (firstY + wBound) < (layoutHeight - 25)) {
-                        if (10 < (firstY - wBound) && (firstY - wBound) < (layoutHeight - 25)) {
+            if (10 < (firstX + buttonBound) && (firstX + buttonBound) < (layoutWidth - 25)) {
+                if (10 < (firstX - buttonBound) && (firstX - buttonBound) < (layoutWidth - 25)) {
+                    if (10 < (firstY + buttonBound) && (firstY + buttonBound) < (layoutHeight - 25)) {
+                        if (10 < (firstY - buttonBound) && (firstY - buttonBound) < (layoutHeight - 25)) {
                             tempMadeIt = true;
                             continue;
                         }
