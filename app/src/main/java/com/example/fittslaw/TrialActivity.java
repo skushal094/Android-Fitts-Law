@@ -93,8 +93,7 @@ public class TrialActivity extends AppCompatActivity {
 
         if (isActualTrial) {
             db_helper = new DatabaseHelper(this);
-        }
-        else {
+        } else {
             MAX_TRIALS = 1;
         }
 
@@ -242,7 +241,6 @@ public class TrialActivity extends AppCompatActivity {
 
 
             myIntent.putIntegerArrayListExtra("failed_positions", failedPositions);
-
 
 
             myIntent.putExtra("solving_missed", solvingMissed);
