@@ -112,11 +112,24 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/text7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text6"
+            android:background="#FFFFFF"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="25dp"
+            android:text="We assume that when you start the round in any trial, you are clicking at the center of the start button."
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <TextView
             android:id="@+id/text8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
-            android:layout_below="@+id/text6"
+            android:layout_below="@+id/text7"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="25dp"
             android:text="You MUST not go back or out of the application in between so that we can have reliable data."
